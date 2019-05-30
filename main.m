@@ -28,3 +28,5 @@ for iter = 1:length(tau)
     data_state(:, iter+1) = xt;
     data_ctrl(:, iter) = ut;
 end
+
+%% Visualize and Plot
