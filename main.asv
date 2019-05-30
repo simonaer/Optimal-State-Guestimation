@@ -34,13 +34,9 @@ for iter = 1:1:tMax/update_freq
     data_state = [data_state trajetory];
     data_ctrl = [data_ctrl control];
     
-    %EKF update step
-    
-    % MPC for control for next 1/update_freq seconds, how to best reduce
-    % the current sigma for target position.
+    % MPC for control for next 1/update_freq seconds
     [ut, extra_out] = aircraftMPC(dt, xt, ut, extra_in);
     
-    %using control determined by MPC, make EKF prediction
     
     
     
