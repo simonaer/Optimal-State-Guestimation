@@ -5,8 +5,7 @@ clear, close all
 t0 = 0;
 tMax = 50;
 dt_simu = 0.02; % simulation time step 50 Hz
-update_freq_Hz = 1; %1 measurement per second
-dt_iter = 1/update_freq_Hz; % main loop update time step 1Hz
+dt_iter = 1.0; % main loop update time step 1Hz
 dt_ctrl = dt_simu; % control updating time step;
 T_iter = t0:dt_iter:tMax;
 T_ctrl = t0:dt_ctrl:tMax;
@@ -21,8 +20,6 @@ ut = [10*ones(1,dt_iter/dt_simu);
 %Constraints
 v_min = 10; %minimum speed is 10 m/s
 w_max = 1/3; %maximum 0.333 rad/s in turning
-
-
 
 %EKF initialization
 mu = [0;0;0;-10;-10];
