@@ -16,8 +16,12 @@ dt = 0.02;
 update_freq = 1; %1 measurement per second
 tau = t0:dt:tMax;
 
+%EKF initialization
+mu = [0;0;0;0;0];
+sigma = 10*eye(5);
 %EKF prediction
-
+mu_predict = F_NL(mu,u0);
+sigma_predict = 
 
 %% Init data storage
 data_state = x0;
