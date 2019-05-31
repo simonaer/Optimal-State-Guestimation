@@ -31,14 +31,13 @@ sigma = [0 0 0 0 0;
 %EKF prediction
 [mu_predict, sigma_predict] = EKF_predict(mu, sigma, dt_ctrl, ut);
 
-
-
 %% Init data storage
 X = xt;
 U = ut;
 Y = [0];
 MU = mu;
 SIGMA = sigma;
+
 %% simulation
 for iter = 2:length(T_iter)
     
@@ -49,16 +48,9 @@ for iter = 2:length(T_iter)
     [trajectory] = simulate_dt(xt, ut, dt_ctrl);
     [y,R] = measure_dist(trajectory(1:3,end),trajectory(4:5,end));
     
-    
     %EKF update step
     [mu,sigma]=EKF_update(mu_predict,sigma_predict,R,y);
     
-    % store history
-    X = [X trajectory];
-    U = [U ut];
-    MU = [MU mu];
-    SIGMA = [SIGMA sigma];
-    Y = [Y y];
     % MPC for control for next 1/update_freq seconds, how to best reduce
     % the current sigma for target position.
     %[ut, extra_out] = aircraftMPC(dt_simu, xt, ut, extra_in);
@@ -68,7 +60,12 @@ for iter = 2:length(T_iter)
     %using control determined by MPC, make EKF prediction
     [mu_predict, sigma_predict] = EKF_predict(mu, sigma, dt_ctrl, ut);
        
-    
+    % store history
+    X = [X trajectory];
+    U = [U ut];
+    MU = [MU mu];
+    SIGMA = [SIGMA sigma];
+    Y = [Y y];
 end
 
 %% Visualize and Plot

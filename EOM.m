@@ -15,8 +15,4 @@ rates = [v*cos(theta);
         thetadot;
         0;
         0];
-
-
-
-
 end
