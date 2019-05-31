@@ -1,19 +1,17 @@
-function [trajectory, control] = simulate_dt(xi, u, duration, dt)
+function [trajectory] = simulate_dt(xi, u, dt_ctrl)
     %Simulate for specified duration, with euler integration at time intervals
-    %of dt. Initial state give by xi (5x1), and hold control input of u for
-    %duration of simulation. u is 2x1.
+    %of dt_ctrl. Initial state give by xi (5x1), Control input is 2xT, with
+    %input specified at each time interval.
     
     trajectory = [];
-    control = [];
+    
     x = xi;
-    t = dt;
-    while t<=duration
+
+    for i = 1:1:size(u,2)
         %simulate for dt and record trajectory history
-        rates = EOM(x,u);
-        x = x + dt*rates;
+        rates = EOM(x,u(:,i));
+        x = x + dt_ctrl*rates;
         trajectory = [trajectory x];
-        control = [control u];
-        t = t+dt;
     end
     
 end

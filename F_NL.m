@@ -6,8 +6,8 @@ function x_next = F_NL(x_curr, u, dt)
     my = x_curr(5);
     v = u(1);
     w = u(2);
-    x_next = [x+dt*v*sin(theta);
-              y+dt*v*cos(theta);
+    x_next = [x+dt*v*cos(theta);
+              y+dt*v*sin(theta);
               theta+dt*w;
               mx;
               my];

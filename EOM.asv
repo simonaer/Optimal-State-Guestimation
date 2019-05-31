@@ -1,6 +1,0 @@
-function rates = EOM(x,u)
-%Equation of Motion
-%Returns the rates of states given current states and control inputs
-
-
-end
