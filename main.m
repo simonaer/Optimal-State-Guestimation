@@ -50,11 +50,7 @@ for iter = 2:length(T_iter)
     
     
     %EKF update step
-    %Add update function Here to replace next 4 lines
-    C = C_lin(mu_predict);
-    yhat = G_NL(mu_predict);
-    mu = mu_predict+sigma_predict*C'*inv(C*sigma_predict*C'+R)*(y-yhat);
-    sigma = sigma_predict - sigma_predict*C'*inv(C*sigma_predict*C'+R)*C*sigma_predict;
+    [mu,sigma]=EKF_update(mu_predict,sigma_predict,R,y);
     
     % store history
     X = [X trajectory];
