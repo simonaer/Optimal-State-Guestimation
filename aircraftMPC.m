@@ -1,7 +1,7 @@
 function [u1, extra_out] = aircraftMPC(dt, x0, u0, extra_in)
 % goal: calculate the optimal control given the current state and control
 % input: time step dt; current state x0; current control u0;
-% output: optimal control at t = t0+dt-->u1
+% output: optimal control from t0 to t0 + Dt
 
 n = length(x0); %dimension of state
 m = length(u0); %dimension of control
