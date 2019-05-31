@@ -3,7 +3,7 @@ clear, close all
 
 % time scale
 t0 = 0;
-tMax = 20;
+tMax = 50;
 dt_simu = 0.02; % simulation time step 50 Hz
 update_freq_Hz = 1; %1 measurement per second
 dt_iter = 1/update_freq_Hz; % main loop update time step 1Hz
@@ -13,11 +13,11 @@ T_ctrl = t0:dt_ctrl:tMax;
 T_simu = t0:dt_simu:tMax;
 
 % Initial starting position
-mx = 50; %target x position
-my = 50; %target y position
+mx = 0; %target x position
+my = 15; %target y position
 xt = [0, 0, 0, mx, my]'; %[px, py, th, mx, my]
 ut = [10*ones(1,dt_iter/dt_simu);
-      zeros(1,dt_iter/dt_simu)]; % [v, w]
+      1/3*ones(1,dt_iter/dt_simu)]; % [v, w]
 %Constraints
 v_min = 10; %minimum speed is 10 m/s
 w_max = 1/3; %maximum 0.333 rad/s in turning
@@ -25,8 +25,12 @@ w_max = 1/3; %maximum 0.333 rad/s in turning
 
 
 %EKF initialization
-mu = [0;0;0;30;30];
-sigma = 50*eye(5);
+mu = [0;0;0;-10;-10];
+sigma = [0 0 0 0 0;
+        0 0 0 0 0;
+        0 0 0 0 0;
+        0 0 0 50 0;
+        0 0 0 0 50];
 %EKF prediction
 [mu_predict, sigma_predict] = EKF_predict(mu, sigma, dt_ctrl, ut);
 
@@ -63,7 +67,7 @@ for iter = 2:length(T_iter)
     %[ut, extra_out] = aircraftMPC(dt_simu, xt, ut, extra_in);
     xt = X(1:5,end);
     ut = [10*ones(1,dt_iter/dt_simu);
-            zeros(1,dt_iter/dt_simu)];
+        1/3*ones(1,dt_iter/dt_simu)];
     %using control determined by MPC, make EKF prediction
     [mu_predict, sigma_predict] = EKF_predict(mu, sigma, dt_ctrl, ut);
        
