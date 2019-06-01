@@ -3,8 +3,8 @@ clear, close all
 
 % time scale
 t0 = 0;
-tMax = 5;
-dt_simu = 0.1; % simulation time step 50 Hz
+tMax = 50;
+dt_simu = 0.5; % simulation time step 50 Hz
 dt_iter = 1.0; % main loop update time step 1Hz
 dt_ctrl = dt_simu; % control updating time step;
 T_iter = t0:dt_iter:tMax;
@@ -13,7 +13,7 @@ T_simu = t0:dt_simu:tMax;
 
 % Initial starting position
 mx = 0; %target x position
-my = 400; %target y position
+my = 100; %target y position
 xt = [10, 10, -deg2rad(30), mx, my]'; %[px, py, th, mx, my]
 ut = [10*ones(1,dt_iter/dt_simu);
       1/3*ones(1,dt_iter/dt_simu)]; % [v, w]
@@ -57,7 +57,7 @@ for iter = 2:length(T_iter)
     extra_in.sigma = sigma;
     extra_in.dt_iter = dt_iter;
     extra_in.R = R;
-    [ut, extra_out] = aircraftMPC(dt_ctrl, xt, ut, extra_in);
+    [ut, extra_out] = aircraftMPC(dt_ctrl, xt, ut(:,1), extra_in);
     xt = X(1:5,end);
 %     ut = [10*ones(1,dt_iter/dt_simu);
 %         1/3*ones(1,dt_iter/dt_simu)];
@@ -74,12 +74,9 @@ end
 
 %% Visualize and Plot
 figure(1)
-plot(T_simu,X(1,:), T_iter, MU(1,:))
-figure
-plot(T_simu,X(2,:), T_iter, MU(2,:))
-figure
-plot(T_simu,X(3,:), T_iter, MU(3,:))
-figure
-plot(T_simu,X(4,:), T_iter, MU(4,:))
-figure
-plot(T_simu,X(5,:), T_iter, MU(5,:))
+hold on
+grid on
+plot(X(1,:), X(2,:))
+plot(MU(1,:), MU(2,:))
+legend('X','mu')
+
