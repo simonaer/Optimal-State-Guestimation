@@ -1,0 +1,24 @@
+%function [trace] = MPC_predict(mu,sigma,dt_ctrl,dt_iter,u,R)
+    %predict given a vector of control input (2xt) and dt per control input
+    mu =   [-24.3959; 47.3191;   16.6667;   -1.4230;   13.5309];
+    sigma = [0,0,0,0,0;0,0,0,0,0;0,0,0,0,0;0,0,0,0.0710389684592673,-0.00781081239695403;0,0,0,-0.00781081239695404,0.0728134796386391];
+    dt_ctrl = 0.02;
+    dt_iter_1;
+    u = 
+    time_horizon = size(u,2)*dt_ctrl;
+    measurements = time_horizon/dt_iter;
+    ctrl_per_iter = dt_iter/dt_ctrl;
+    for i = 1:1:measurements
+%         mu_predict = F_NL(mu,u(:,i), dt_ctrl);
+%         A = A_lin(mu,u(:,i),dt_ctrl);
+%         sigma_predict = A*sigma*A';
+%         mu = mu_predict;
+%         sigma = sigma_predict;
+        [mu_predict, sigma_predict] = EKF_predict(mu,sigma,dt_ctrl,u(:,i*ctrl_per_iter-(ctrl_per_iter-1):1*ctrl_per_iter));
+        mu = mu_predict;
+        C = C_lin(mu_predict);
+        sigma = sigma_predict - sigma_predict*C'*inv(C*sigma_predict*C'+R)*C*sigma_predict;
+        
+    end
+    trace = tr(sigma);
+%end
