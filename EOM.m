@@ -11,8 +11,8 @@ thetadot = u(2);
 theta = x(3);
 
 rates = [v*cos(theta);
-        v*sin(theta);
-        thetadot;
-        0;
-        0];
+         v*sin(theta);
+         thetadot;
+         0;
+         0];
 end

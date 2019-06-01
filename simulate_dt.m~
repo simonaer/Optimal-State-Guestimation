@@ -11,7 +11,7 @@ function [trajectory] = simulate_dt(xi, u, dt_ctrl)
         %simulate for dt and record trajectory history
         rates = EOM(x,u(:,i));
         x = x + dt_ctrl*rates;
-        x(3) = wrapToPi(x(3)); % wrap theta s.t. [-pi, pi]
+        x(3) = wrapToPi(x(3)); % wrap theta from [-pi, pi]
         trajectory = [trajectory x];
     end
     

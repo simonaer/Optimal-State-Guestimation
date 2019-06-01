@@ -3,10 +3,10 @@ clear, close all
 
 % time scale
 t0 = 0;
-tMax = 50;
-dt_simu = 0.5; % simulation time step 50 Hz
+tMax = 5;
+dt_simu = 0.02; % simulation time step 50 Hz
 dt_iter = 1.0; % main loop update time step 1Hz
-dt_ctrl = dt_simu; % control updating time step;
+dt_ctrl = 0.5; % control updating time step;
 T_iter = t0:dt_iter:tMax;
 T_ctrl = t0:dt_ctrl:tMax;
 T_simu = t0:dt_simu:tMax;
@@ -49,7 +49,7 @@ for iter = 2:length(T_iter)
     [y,R] = measure_dist(trajectory(1:3,end),trajectory(4:5,end));
     
     %EKF update step
-    [mu,sigma]=EKF_update(mu_predict,sigma_predict,R,y);
+    [mu,sigma] = EKF_update(mu_predict,sigma_predict,R,y);
     
     % MPC for control for next 1/update_freq seconds, how to best reduce
     % the current sigma for target position.
@@ -58,7 +58,7 @@ for iter = 2:length(T_iter)
     extra_in.dt_iter = dt_iter;
     extra_in.R = R;
     [ut, extra_out] = aircraftMPC(dt_ctrl, xt, ut(:,1), extra_in);
-    xt = X(1:5,end);
+%     xt = X(1:5,end);
 %     ut = [10*ones(1,dt_iter/dt_simu);
 %         1/3*ones(1,dt_iter/dt_simu)];
     %using control determined by MPC, make EKF prediction
