@@ -3,7 +3,7 @@ clear, close all
 
 % time scale
 t0 = 0;
-tMax = 5;
+tMax = 50;
 dt_simu = 0.02; % simulation time step 50 Hz
 dt_iter = 1.0; % main loop update time step 1Hz
 dt_ctrl = 0.5; % control updating time step;
@@ -13,7 +13,7 @@ T_simu = t0:dt_simu:tMax;
 
 % Initial starting position
 mx = 0; %target x position
-my = 100; %target y position
+my = 500; %target y position
 xt = [10, 10, -deg2rad(30), mx, my]'; %[px, py, th, mx, my]
 ut = [10*ones(1,dt_iter/dt_simu);
       1/3*ones(1,dt_iter/dt_simu)]; % [v, w]
@@ -22,7 +22,7 @@ v_min = 10; %minimum speed is 10 m/s
 w_max = 1/3; %maximum 0.333 rad/s in turning
 
 %EKF initialization
-mu = [0;0;0;-10;-10];
+mu = [10; 10; 0; 0; 500];
 sigma = [0 0 0 0 0;
         0 0 0 0 0;
         0 0 0 0 0;
@@ -57,10 +57,8 @@ for iter = 2:length(T_iter)
     extra_in.sigma = sigma;
     extra_in.dt_iter = dt_iter;
     extra_in.R = R;
-    [ut, extra_out] = aircraftMPC(dt_ctrl, xt, ut(:,1), extra_in);
-%     xt = X(1:5,end);
-%     ut = [10*ones(1,dt_iter/dt_simu);
-%         1/3*ones(1,dt_iter/dt_simu)];
+    [ut, extra_out] = aircraftMPC(dt_ctrl, mu, ut(:,1), extra_in); % TODO: should we input xt or mu to optimizer?
+
     %using control determined by MPC, make EKF prediction
     [mu_predict, sigma_predict] = EKF_predict(mu, sigma, dt_ctrl, ut);
        
