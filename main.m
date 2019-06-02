@@ -13,8 +13,8 @@ T_simu = t0:dt_simu:tMax;
 
 % Initial starting position
 mx = 0; %target x position
-my = 500; %target y position
-xt = [10, 10, -deg2rad(30), mx, my]'; %[px, py, th, mx, my]
+my = 50; %target y position
+xt = [0, 0, deg2rad(0), mx, my]'; %[px, py, th, mx, my]
 ut = [10*ones(1,dt_iter/dt_simu);
       1/3*ones(1,dt_iter/dt_simu)]; % [v, w]
 %Constraints
@@ -22,7 +22,7 @@ v_min = 10; %minimum speed is 10 m/s
 w_max = 1/3; %maximum 0.333 rad/s in turning
 
 %EKF initialization
-mu = [10; 10; 0; 0; 500];
+mu = [xt(1); xt(2); xt(3); 50; 0];
 sigma = [0 0 0 0 0;
         0 0 0 0 0;
         0 0 0 0 0;
@@ -34,7 +34,7 @@ sigma = [0 0 0 0 0;
 %% Init data storage
 X = xt;
 U = ut;
-Y = [0];
+Y = [xt(1:3);0];
 MU = mu;
 SIGMA = sigma;
 
@@ -78,3 +78,9 @@ plot(X(1,:), X(2,:))
 plot(MU(1,:), MU(2,:))
 legend('X','mu')
 
+figure(1)
+hold on
+grid on
+plot(X(1,:), X(2,:))
+plot(MU(4,:), MU(5,:))
+legend('X','target')
