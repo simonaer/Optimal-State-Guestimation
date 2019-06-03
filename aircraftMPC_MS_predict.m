@@ -6,11 +6,13 @@ function [matrix_trace] = aircraftMPC_MS_predict(mu,sigma,dt_ctrl,dt_iter,x,R)
     time_horizon = size(u,2)*dt_ctrl;
     measurements = time_horizon/dt_iter;
     ctrl_per_iter = dt_iter/dt_ctrl;
+    
     for i = 1:1:measurements
 
         [mu_predict, sigma_predict] = EKF_predict(mu,sigma,dt_ctrl,u(:,i*ctrl_per_iter-(ctrl_per_iter-1):i*ctrl_per_iter));
         mu = mu_predict;
         C = C_lin(mu_predict);
+        [void, R] = measure_dist(mu_predict(1:3),mu_predict(4:5));
         sigma = sigma_predict - sigma_predict*C'*inv(C*sigma_predict*C'+R)*C*sigma_predict;
         
     end

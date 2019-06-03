@@ -12,17 +12,17 @@ T_ctrl = t0:dt_ctrl:tMax;
 T_simu = t0:dt_simu:tMax;
 
 % Initial starting position
-mx = 0; %target x position
-my = 50; %target y position
+mx = 10; %target x position
+my = -50; %target y position
 xt = [0, 0, deg2rad(0), mx, my]'; %[px, py, th, mx, my]
-ut = [10*ones(1,dt_iter/dt_simu);
-      1/3*ones(1,dt_iter/dt_simu)]; % [v, w]
+ut = [10*ones(1,dt_iter/dt_ctrl);
+      0*ones(1,dt_iter/dt_ctrl)]; % [v, w]
 %Constraints
 v_min = 10; %minimum speed is 10 m/s
 w_max = 1/3; %maximum 0.333 rad/s in turning
 
 %EKF initialization
-mu = [xt(1); xt(2); xt(3); 50; 0];
+mu = [xt(1); xt(2); xt(3); 10; -30];
 sigma = [0 0 0 0 0;
         0 0 0 0 0;
         0 0 0 0 0;
@@ -57,9 +57,9 @@ for iter = 2:length(T_iter)
     extra_in.sigma = sigma;
     extra_in.dt_iter = dt_iter;
     extra_in.R = R;
-    %[ut, extra_out] = aircraftMPC(dt_ctrl, mu, ut(:,1), extra_in); % TODO: should we input xt or mu to optimizer?
-    ut = aircraftMPC_MS(dt_ctrl, dt_simu, dt_iter, [X(1:3,end);mu(4:5)], sigma, R);
-    
+    [ut, extra_out] = aircraftMPC(dt_ctrl, mu, ut(:,1), extra_in); % TODO: should we input xt or mu to optimizer?
+    %ut = aircraftMPC_MS(dt_ctrl, dt_simu, dt_iter, [X(1:3,end);mu(4:5)], U(:,end), sigma, R);
+    %ut = aircraftMPC_MS(dt_ctrl, dt_simu, dt_iter, mu, sigma, R);
     %using control determined by MPC, make EKF prediction
     [mu_predict, sigma_predict] = EKF_predict(mu, sigma, dt_ctrl, ut);
        
@@ -85,3 +85,9 @@ grid on
 plot(X(1,:), X(2,:))
 plot(MU(4,:), MU(5,:))
 legend('X','target')
+
+for i = 1:1:size(MU,2)
+    SIGMA_TRACE(i) = trace(SIGMA(1:5,i*5-4:i*5));
+end
+figure
+plot(T_iter,SIGMA_TRACE)
