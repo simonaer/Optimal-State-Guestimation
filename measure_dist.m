@@ -8,10 +8,10 @@ sig_dis = a2*(r-a1)^2 + a0; %variance_dis
 R = [0.01 0 0 0;
     0 0.01 0 0;
     0 0 0.01 0;
-    0 0 0 sqrt(sig_dis)];
+    0 0 0 sig_dis];
 y=[x(1);
    x(2);
    x(3);
-   norm(m-x(1:2))+mvnrnd(0,sqrt(sig_dis))];% distance measurement
+   norm(m-x(1:2))+mvnrnd(0,sig_dis)];% distance measurement
 end
 

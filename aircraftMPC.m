@@ -9,7 +9,7 @@ function [u1, extra_out] = aircraftMPC(dt, x0, u0, extra_in)
 n = 3; %dimension of state
 m = 2; %dimension of control
 u_min = [10, -1/3]';
-u_max = [30,  1/3]';
+u_max = [20,  1/3]';
   
 T = 3; % planning horizon
 N = T/dt; % planning steps = length of control vector
