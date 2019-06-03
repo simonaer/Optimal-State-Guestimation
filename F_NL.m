@@ -8,7 +8,8 @@ function x_next = F_NL(x_curr, u, dt)
     w = u(2);
     x_next = [x+dt*v*cos(theta);
               y+dt*v*sin(theta);
-              wrapToPi(theta+dt*w);
+              theta+dt*w;
+              %wrapToPi(theta+dt*w);
               mx;
               my];
 end
