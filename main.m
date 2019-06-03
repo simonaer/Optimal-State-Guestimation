@@ -38,6 +38,7 @@ Y = [xt(1:3);0];
 MU = mu;
 SIGMA = sigma;
 UOPT = [];
+dist = [0];
 % simulation
 for iter = 2:length(T_iter)
     
@@ -57,12 +58,13 @@ for iter = 2:length(T_iter)
     extra_in.sigma = sigma;
     extra_in.dt_iter = dt_iter;
     extra_in.R = R;
-    [ut, extra_out] = aircraftMPC(dt_ctrl, mu, ut(:,1), extra_in); % TODO: should we input xt or mu to optimizer?
-    full_ut_opt = extra_out.U;
-    %ut = circle_controller(X(:,end),mu,dt_iter, dt_ctrl);
-    %full_ut_opt = ut;
-    %ut = aircraftMPC_MS(dt_ctrl, dt_simu, dt_iter, [X(1:3,end);mu(4:5)], U(:,end), sigma, R);
-    %ut = aircraftMPC_MS(dt_ctrl, dt_simu, dt_iter, mu, sigma, R);
+    %uncomment next two lines for MPC
+    %[ut, extra_out] = aircraftMPC(dt_ctrl, mu, ut(:,1), extra_in); % TODO: should we input xt or mu to optimizer?
+    %full_ut_opt = extra_out.U;
+    
+    %uncomment next two lines for simple circle tracking
+    ut = circle_controller(X(:,end),mu,dt_iter, dt_ctrl);
+    full_ut_opt = ut;
     %using control determined by MPC, make EKF prediction
     
     [mu_predict, sigma_predict] = EKF_predict(mu, sigma, dt_ctrl, ut);
@@ -74,6 +76,8 @@ for iter = 2:length(T_iter)
     MU = [MU mu];
     SIGMA = [SIGMA sigma];
     Y = [Y y];
+    distance = sqrt((X(2,end)-mu(5))^2+(X(1,end)-mu(4))^2)
+    dist = [dist distance];
 end
 
 %% Visualize and Plot
@@ -96,5 +100,8 @@ for i = 1:1:size(MU,2)
 end
 figure
 plot(T_iter,SIGMA_TRACE)
+figure
+plot(T_iter, dist)
+
 %%
 visualize_path_fmincon(X,MU,SIGMA,UOPT,dt_simu,dt_ctrl,dt_iter,T_simu)

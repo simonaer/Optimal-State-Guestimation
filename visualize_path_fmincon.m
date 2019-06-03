@@ -18,7 +18,7 @@ t = 0;  %Set movie time to 0
 i = 1;  %Set index of array to start
 pause(1);
 
-v = VideoWriter('Simulate_fmincon.avi');
+v = VideoWriter('Simulate_circle.avi');
 v.FrameRate = 1/dt_simu;
 dt = dt_simu;
 
@@ -41,8 +41,9 @@ while i<=timesteps
     %imshow(drone_rotated, RI)
     imshow(flipud(drone_rotated),RI);
     axis xy;
+    axis equal
     %axis display
-    axis([-10 70 -90 10])
+    axis([-10 80 -120 20])
     title(sprintf('Time = %.2f seconds', T_simu(i)))
     hold on
     %Plot optimal trajectory
@@ -75,7 +76,7 @@ while i<=timesteps
     end
 
     ellip =plot(ellipse(1,:),ellipse(2,:), 'b')
-    legend([traj trail sc_target sc ellip], {'MPC path', 'trajectory', 'beacon position', 'mu', 'error ellipse'})
+    legend([traj trail sc_target sc ellip], {'circle tracking', 'trajectory', 'beacon position', 'mu', 'error ellipse'}, 'Location', 'SouthWest')
     grid minor
     
     

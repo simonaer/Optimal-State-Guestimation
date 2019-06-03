@@ -19,4 +19,6 @@ function [trajectory] = simulate_dt(xi, u, dt_ctrl, dt_simu)
         end
     end
     
+    
+    
 end
