@@ -1,5 +1,6 @@
 %% AA273 Project
-clear, close all
+clear
+%close all
 
 % time scale
 t0 = 0;
@@ -59,12 +60,12 @@ for iter = 2:length(T_iter)
     extra_in.dt_iter = dt_iter;
     extra_in.R = R;
     %uncomment next two lines for MPC
-    %[ut, extra_out] = aircraftMPC(dt_ctrl, mu, ut(:,1), extra_in); % TODO: should we input xt or mu to optimizer?
-    %full_ut_opt = extra_out.U;
+    [ut, extra_out] = aircraftMPC(dt_ctrl, mu, ut(:,1), extra_in); % TODO: should we input xt or mu to optimizer?
+    full_ut_opt = extra_out.U;
     
     %uncomment next two lines for simple circle tracking
-    ut = circle_controller(X(:,end),mu,dt_iter, dt_ctrl);
-    full_ut_opt = ut;
+    %ut = circle_controller(X(:,end),mu,dt_iter, dt_ctrl);
+    %full_ut_opt = ut;
     %using control determined by MPC, make EKF prediction
     
     [mu_predict, sigma_predict] = EKF_predict(mu, sigma, dt_ctrl, ut);
@@ -76,7 +77,7 @@ for iter = 2:length(T_iter)
     MU = [MU mu];
     SIGMA = [SIGMA sigma];
     Y = [Y y];
-    distance = sqrt((X(2,end)-mu(5))^2+(X(1,end)-mu(4))^2)
+    distance = sqrt((X(2,end)-mu(5))^2+(X(1,end)-mu(4))^2);
     dist = [dist distance];
 end
 
@@ -104,4 +105,4 @@ figure
 plot(T_iter, dist)
 
 %%
-visualize_path_fmincon(X,MU,SIGMA,UOPT,dt_simu,dt_ctrl,dt_iter,T_simu)
+%visualize_path_fmincon(X,MU,SIGMA,UOPT,dt_simu,dt_ctrl,dt_iter,T_simu)
